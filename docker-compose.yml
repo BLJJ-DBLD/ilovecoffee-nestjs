@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  db:
+    # 指定镜像：postgres
+    image: postgres
+    restart: always
+    ports:
+      # 设置端口，postgres默认端口是5432，docker中暴露的端口也是5432
+      - '5432:5432'
+    environment:
+      # 设置环境变量 - 数据库密码
+      POSTGRES_PASSWORD: pass123
