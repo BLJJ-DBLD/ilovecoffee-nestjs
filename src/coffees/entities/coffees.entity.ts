@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Flavors } from './flavors.entity';
 
 @Entity() // sql table === 'coffee'
 export class Coffee {
@@ -11,6 +18,11 @@ export class Coffee {
   @Column()
   brand: string;
 
-  @Column('json', { nullable: true }) // TypeORM 会清楚该字段保存为 JSON，并且允许为 null
+  // JoinTable 因为 Coffee 是作为主表存在的
+  @JoinTable() // 有助于指定关系的 Owner 端
+  // 风味与咖啡的关系是 多对多：@ManyToMany()
+  // 第一个参数：确定关系的类型是什么；这只是一个函数，它返回对“相关”实体的引用
+  // 第二个参数：传入一个箭头函数，该函数返回相关实体，并指定需要选择关联的属性
+  @ManyToMany((type) => Flavors, (flavors) => flavors.coffees)
   flavors: string[];
 }
