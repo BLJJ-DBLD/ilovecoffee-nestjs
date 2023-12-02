@@ -5,7 +5,7 @@ import {
   ManyToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Flavors } from './flavors.entity';
+import { Flavor } from './flavor.entity';
 
 @Entity() // sql table === 'coffee'
 export class Coffee {
@@ -23,6 +23,9 @@ export class Coffee {
   // 风味与咖啡的关系是 多对多：@ManyToMany()
   // 第一个参数：确定关系的类型是什么；这只是一个函数，它返回对“相关”实体的引用
   // 第二个参数：传入一个箭头函数，该函数返回相关实体，并指定需要选择关联的属性
-  @ManyToMany((type) => Flavors, (flavors) => flavors.coffees)
-  flavors: string[];
+  // 第三个参数：配置关系，cascade 表示级联关系
+  @ManyToMany((type) => Flavor, (flavor) => flavor.coffees, {
+    cascade: true,
+  })
+  flavors: Flavor[];
 }
