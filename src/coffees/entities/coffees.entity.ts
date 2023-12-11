@@ -13,10 +13,16 @@ export class Coffee {
   id: number;
 
   @Column() // 啥没传时表示必填入
-  name: string;
+  title: string;
+
+  @Column({ nullable: true })
+  description: string;
 
   @Column()
   brand: string;
+
+  @Column({ default: 0 })
+  recommondations: number;
 
   // JoinTable 因为 Coffee 是作为主表存在的
   @JoinTable() // 有助于指定关系的 Owner 端

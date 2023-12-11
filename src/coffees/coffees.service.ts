@@ -7,10 +7,11 @@ import {
 import { Coffee } from './entities/coffees.entity';
 import { CreateCoffeeDto } from './dto/create-coffee.dto/create-coffee.dto';
 import { UpdateCoffeeDto } from './dto/update-coffee.dto/update-coffee.dto';
-import { Repository } from 'typeorm';
+import { Connection, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Flavor } from './entities/flavor.entity';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto/pagination-query.dto';
+import { Event } from 'src/events/entities/event.entity';
 
 @Injectable()
 export class CoffeesService {
@@ -20,6 +21,8 @@ export class CoffeesService {
 
     @InjectRepository(Flavor)
     private readonly flavorRepository: Repository<Flavor>,
+
+    private readonly connection: Connection,
   ) {}
 
   findAll(paginationQuery: PaginationQueryDto) {
@@ -81,6 +84,32 @@ export class CoffeesService {
       },
     });
     return this.coffeeRepository.remove(coffee);
+  }
+
+  async recommendCoffee(coffee: Coffee) {
+    const queryRunner = this.connection.createQueryRunner(); // 创建 queryRunner 去连接数据库
+
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      coffee.recommondations++;
+
+      const recommendEvent = new Event();
+      recommendEvent.name = 'recommend_coffee';
+      recommendEvent.type = 'coffee';
+      recommendEvent.payload = { coffeeId: coffee.id };
+
+      // 这两件事都成功时才会完全成功
+      await queryRunner.manager.save(coffee);
+      await queryRunner.manager.save(recommendEvent);
+
+      await queryRunner.commitTransaction();
+    } catch (error) {
+      await queryRunner.rollbackTransaction(); // 通过回滚整个事务防止数据库的不一致
+    } finally {
+      await queryRunner.release(); // 确保一切完成后释放或关闭 queryRunner
+    }
   }
 
   async preloadFlavorByName(name: string): Promise<Flavor> {
