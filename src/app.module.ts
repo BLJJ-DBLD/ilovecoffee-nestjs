@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CoffeesModule } from './coffees/coffees.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CoffeeRatingModule } from './coffee-rating/coffee-rating.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       autoLoadEntities: true, // 有助于自动加载模块，而不用指定实体数据
       synchronize: true, // 确保 TypeORM 实体会同步数据库
     }),
+    CoffeeRatingModule,
   ],
   controllers: [AppController],
   providers: [AppService],
