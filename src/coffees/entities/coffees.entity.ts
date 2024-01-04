@@ -13,7 +13,7 @@ export class Coffee {
   id: number;
 
   @Column() // 啥没传时表示必填入
-  title: string;
+  name: string;
 
   @Column({ nullable: true })
   description: string;

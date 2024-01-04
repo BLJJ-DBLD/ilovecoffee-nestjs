@@ -1,3 +1,4 @@
+// ORM 和 数据库 连接配置
 module.exports = {
   type: 'postgres',
   host: 'localhost',
