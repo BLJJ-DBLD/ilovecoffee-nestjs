@@ -5,6 +5,7 @@ import { CoffeesModule } from './coffees/coffees.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CoffeeRatingModule } from './coffee-rating/coffee-rating.module';
 import { DatabaseModule } from './database/database.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -21,6 +22,10 @@ import { DatabaseModule } from './database/database.module';
     }),
     CoffeeRatingModule,
     DatabaseModule,
+    ConfigModule.forRoot({
+      // envFilePath: ['.env' /* 默认 */, '.env.development.local'], // 指定环境变量文件
+      // ignoreEnvFile: true,// 忽略环境变量文件
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
