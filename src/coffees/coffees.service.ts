@@ -14,7 +14,8 @@ import { Flavor } from './entities/flavor.entity';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto/pagination-query.dto';
 import { Event } from 'src/events/entities/event.entity';
 import { COFFEE_BRANDS } from './coffees.constants';
-import { ConfigService } from '@nestjs/config';
+import { ConfigService, ConfigType } from '@nestjs/config';
+import coffeesConfig from './config/coffees.config';
 
 @Injectable()
 export class CoffeesService {
@@ -30,10 +31,22 @@ export class CoffeesService {
     @Inject(COFFEE_BRANDS) coffeeBrands: string[],
 
     private readonly configService: ConfigService,
+
+    @Inject(coffeesConfig.KEY)
+    private readonly coffeesConfiguration: ConfigType<typeof coffeesConfig>,
   ) {
     console.log(coffeeBrands, '控制台输出');
     console.log(this.configService.get<string>('DARABASE_HOST', 'localhost'));
     console.log(this.configService.get<number>('database.port'), '端口---');
+
+    console.log(
+      this.configService.get('coffees.foo'),
+      'coffees.foo 配置文件输出，通过 this.configService.get 获取',
+    );
+    console.log(
+      coffeesConfiguration.foo,
+      'coffees.foo 配置文件输出，通过 coffeesConfiguration 获取 **推荐**',
+    );
   }
 
   findAll(paginationQuery: PaginationQueryDto) {
