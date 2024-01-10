@@ -7,6 +7,7 @@ import { CoffeeRatingModule } from './coffee-rating/coffee-rating.module';
 import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from '@hapi/joi';
+import appConfig from './config/app.config';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import * as Joi from '@hapi/joi';
       }),
       // envFilePath: ['.env' /* 默认 */, '.env.development.local'], // 指定环境变量文件
       // ignoreEnvFile: true,// 忽略环境变量文件
+      load: [appConfig], // 加载环境变量
     }),
   ],
   controllers: [AppController],
