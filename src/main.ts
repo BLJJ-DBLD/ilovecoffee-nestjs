@@ -4,6 +4,9 @@ import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  // app.useGlobalFilters
+  // app.useGlobalGuards
+  // app.useGlobalInterceptors
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true, // 设置白名单，忽略不在白名单中的字段
